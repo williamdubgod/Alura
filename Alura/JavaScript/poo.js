@@ -1,12 +1,21 @@
 class Cliente {
     nome;
-    cpf;
+    _cpf;
+
+    get cpf() {
+        return this._cpf
+    }
+
+    constructor(nome, cpf) {
+        this.nome = nome;
+        this._cpf = cpf;
+    }
 }
 
 class ContaCorrente {
-    _cliente;
     agencia;
-    saldo;
+    _cliente;
+    _saldo = 0;
 
     set cliente(novoValor){
         if(novoValor instanceof Cliente) {
@@ -22,9 +31,14 @@ class ContaCorrente {
         return this._saldo;
     }
 
+    constructor(cliente, agencia) {
+        this.cliente = cliente;
+        this.agencia = agencia;
+    }
+
     sacar(valor){
-        if(this.saldo >= valor){
-            this.saldo -= valor;
+        if(this._saldo >= valor){
+            this._saldo -= valor;
             return valor;
         }
         else {
@@ -33,9 +47,10 @@ class ContaCorrente {
     }
 
     depositar(valor){
-        if(valor > 0) {
-            this.saldo += valor;
+        if(valor <= 0) {
+            return;
         }
+        this._saldo += valor;
     }
 
     transferir(valor, conta){
@@ -44,37 +59,22 @@ class ContaCorrente {
     }
 }
 
-/*const cliente1 = new Cliente();
-cliente1.nome = "William";
-cliente1.cpf = 37490547890; */
 
-/* const cliente2 = new Cliente()
-cliente2.nome = "Larissa";
-cliente2.cpf = 93652733468 */
+const cliente1 = new Cliente("William", 37490547890);
 
-const contaWilliam = new ContaCorrente();
-contaWilliam.cliente = new Cliente();
-contaWilliam._cliente.nome = "William";
-contaWilliam._cliente.cpf = 37490547890;
-contaWilliam.agencia = 6098;
-contaWilliam.saldo = 1800;
+const cliente2 = new Cliente("Larissa", 93652433468);
+
+const contaWilliam = new ContaCorrente(cliente1, 6098);
 
 contaWilliam.depositar(1200);
 contaWilliam.sacar(600);
 
-const contaLarissa = new ContaCorrente();
-contaLarissa.cliente = new Cliente();
-contaLarissa._cliente.nome = "Larissa";
-contaLarissa._cliente.cpf = 93652733468;
-contaLarissa.agencia = 4562;
-contaLarissa.saldo = 1200;
+const contaLarissa = new ContaCorrente(cliente2, 4562);
 
-contaLarissa.depositar(1200);
-contaLarissa.sacar(1500);
+let valor = 500;
+contaWilliam.transferir(valor, contaLarissa);
 
-contaWilliam.transferir(1500, contaLarissa);
+contaLarissa.sacar(400);
+
 console.log(contaWilliam);
 console.log(contaLarissa);
-
-console.log(contaWilliam._cliente);
-console.log(contaLarissa._cliente);
